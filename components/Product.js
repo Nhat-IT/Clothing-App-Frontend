@@ -1,9 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, View, Text, Image, Dimensions } from "react-native";
 
-export default class Product extends Component {
-
-  render() {
+export default Product = () => {
     return (
       <View style={{}}>
         <Image
@@ -16,7 +14,6 @@ export default class Product extends Component {
         <Text>125.000</Text>
       </View>
     );
-  }
 }
 
 const windowWidth = Dimensions.get('window').width;
@@ -24,7 +21,7 @@ const windowWidth = Dimensions.get('window').width;
 const styles = StyleSheet.create({
   tinyLogo: {
     width: windowWidth / 2 - 10,
-    height: 200,
+    height: 'auto',
     borderRadius: 10,
     marginTop: 20
   },
