@@ -23,6 +23,7 @@ export const Items = [
     price: "391.000",
     createAt: "2022-05-19",
     modifiedAt: "2022-05-19",
+    productImage: require("../../assets/images/1.1.jpg"),
     size: {
       S: 10,
       M: 5,
@@ -49,6 +50,7 @@ export const Items = [
     price: "391.000",
     createAt: "2022-05-19",
     modifiedAt: "2022-05-19",
+    productImage: require("../../assets/images/2.1.jpg"),
     size: {
       S: 10,
       M: 5,
@@ -75,6 +77,7 @@ export const Items = [
     price: "391.000",
     createAt: "2022-05-19",
     modifiedAt: "2022-05-19",
+    productImage: require("../../assets/images/3.1.jpg"),
     size: {
       S: 10,
       M: 5,
@@ -101,6 +104,7 @@ export const Items = [
     price: "391.000",
     createAt: "2022-05-19",
     modifiedAt: "2022-05-19",
+    productImage: require("../../assets/images/4.1.jpg"),
     size: {
       S: 10,
       M: 5,
@@ -127,6 +131,7 @@ export const Items = [
     price: "391.000",
     createAt: "2022-05-19",
     modifiedAt: "2022-05-19",
+    productImage: require("../../assets/images/5.1.jpg"),
     size: {
       S: 10,
       M: 5,
@@ -153,6 +158,7 @@ export const Items = [
     price: "391.000",
     createAt: "2022-05-19",
     modifiedAt: "2022-05-19",
+    productImage: require("../../assets/images/6.1.jpg"),
     size: {
       S: 10,
       M: 5,
@@ -179,6 +185,7 @@ export const Items = [
     price: "391.000",
     createAt: "2022-05-19",
     modifiedAt: "2022-05-19",
+    productImage: require("../../assets/images/7.1.jpg"),
     size: {
       S: 10,
       M: 5,
@@ -205,6 +212,7 @@ export const Items = [
     price: "391.000",
     createAt: "2022-05-19",
     modifiedAt: "2022-05-19",
+    productImage: require("../../assets/images/8.1.jpg"),
     size: {
       S: 10,
       M: 5,
@@ -231,6 +239,7 @@ export const Items = [
     price: "391.000",
     createAt: "2022-05-19",
     modifiedAt: "2022-05-19",
+    productImage: require("../../assets/images/9.1.jpg"),
     size: {
       S: 10,
       M: 5,
@@ -257,6 +266,7 @@ export const Items = [
     price: "391.000",
     createAt: "2022-05-19",
     modifiedAt: "2022-05-19",
+    productImage: require("../../assets/images/10.1.jpg"),
     size: {
       S: 10,
       M: 5,
@@ -283,6 +293,7 @@ export const Items = [
     price: "391.000",
     createAt: "2022-05-19",
     modifiedAt: "2022-05-19",
+    productImage: require("../../assets/images/11.1.jpg"),
     size: {
       S: 10,
       M: 5,
@@ -309,6 +320,7 @@ export const Items = [
     price: "391.000",
     createAt: "2022-05-19",
     modifiedAt: "2022-05-19",
+    productImage: require("../../assets/images/12.1.jpg"),
     size: {
       S: 10,
       M: 5,
@@ -335,6 +347,7 @@ export const Items = [
     price: "391.000",
     createAt: "2022-05-19",
     modifiedAt: "2022-05-19",
+    productImage: require("../../assets/images/13.1.jpg"),
     size: {
       S: 10,
       M: 5,
@@ -361,6 +374,7 @@ export const Items = [
     price: "391.000",
     createAt: "2022-05-19",
     modifiedAt: "2022-05-19",
+    productImage: require("../../assets/images/14.1.jpg"),
     size: {
       S: 10,
       M: 5,

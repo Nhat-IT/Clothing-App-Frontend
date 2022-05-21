@@ -20,26 +20,18 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Ionic from "react-native-vector-icons/Ionicons";
 
 const windowWidth = Dimensions.get("window").width;
-const Item = ({ title, data }) => (
-  <View style={{ borderRadius: 20 }}>
-    <TouchableHighlight
-      onPress={() =>
-        console.log(data)
-      }
-      underlayColor={"#e7e9eb"}
-      style={styles.touch}
-    >
-      <View style={styles.item}>
-        <Image source={title.images[0]} style={styles.imageItem} />
-        <Text style={styles.title}>{title.name}</Text>
-        <Ionic name="heart-outline" />
-        <Text>{title.price}</Text>
-      </View>
-    </TouchableHighlight>
+const Item = ({ title }) => {
+  return (
+    <View style={styles.item}>
+    <Image source={title.productImage} style={styles.imageItem} />
+    <Text style={styles.title}>{title.name}</Text>
+    <Ionic name="heart-outline" />
+    <Text style={{width: 100}}>{title.price}</Text>
   </View>
-);
+  )
+};
 
-const Home = (navigation) => {
+const Home = ({navigation}) => {
   const [products, setProducts] = useState([]);
   useEffect(() => {
     getDataFromDatabase();
@@ -48,23 +40,33 @@ const Home = (navigation) => {
   getDataFromDatabase = () => {
     let productList = [];
     for (let index = 0; index < Items.length; index++) {
+      console.log(Items[index].images)
       productList.push(Items[index]);
     }
     setProducts(productList);
   };
 
-
-  console.log(navigation)
-  const renderItem = ({ item }) => <Item title={item} data={navigation}/>;
   return (
     <>
       <SafeAreaView style={styles.container}>
         <FlatList
           numColumns={2}
           data={products}
-          renderItem={renderItem}
           keyExtractor={(item) => item.id}
-          navigation = {navigation}
+          renderItem={({ item }) => {
+            return (
+              <>
+                <TouchableHighlight
+                  onPress={() => navigation.navigate('ProductInfo', {productID: item.id})}
+                  underlayColor={"#e7e9eb"}
+                  style={styles.touch}
+
+                >
+                  <Item title={item} />
+                </TouchableHighlight>
+              </>
+            );
+          }}
         />
       </SafeAreaView>
     </>
@@ -96,7 +98,5 @@ const styles = StyleSheet.create({
     borderRadius: 30,
   },
 });
-
-
 
 export default Home;
