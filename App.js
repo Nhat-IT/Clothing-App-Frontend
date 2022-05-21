@@ -1,52 +1,46 @@
-import { StatusBar } from "expo-status-bar";
-import React, { useState, useRef } from "react";
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-  Image,
-  ScrollView,
-} from "react-native";
+import { StatusBar } from "react-native";
 import Ionic from "react-native-vector-icons/Ionicons";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Home from "./components/Home";
-import Search from "./components/Search";
-import Cart from "./components/Cart";
-import Account from "./components/Account";
+import Home from "./components/screens/Home";
+import Search from "./components/screens/Search";
+import Cart from "./components/screens/Cart";
+import Account from "./components/screens/Account";
 
 const Tab = createBottomTabNavigator();
 
 export default App = () => {
   return (
-    <NavigationContainer>
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, size, colours }) => {
-            let iconName;
-            if (route.name === "Home") {
-              iconName = focused ? "ios-home" : "ios-home-outline";
-            }
-            else if(route.name === "Search"){
-              iconName = focused ? "search" : "search-outline";
-            }
-            else if(route.name === "Cart"){
-              iconName = focused ? "cart" : "cart-outline";
-            }
-            else if(route.name === "Account"){
-              iconName = focused ? "people" : "people-outline";
-            }
-            return <Ionic name={iconName} size={size} colours={colours}/>
-          },
-        })}
-        
-      >
-        <Tab.Screen name="Home" component={Home} />
-        <Tab.Screen name="Search" component={Search} />
-        <Tab.Screen name="Cart" component={Cart} />
-        <Tab.Screen name="Account" component={Account} />
-      </Tab.Navigator>
-    </NavigationContainer>
+    <>
+    <StatusBar backgroundColor="#fff" barStyle="dark-content"/>
+      <NavigationContainer>
+        <Tab.Navigator
+          screenOptions={({ route }) => ({
+            tabBarIcon: ({ focused, size, colours }) => {
+              let iconName;
+              if (route.name === "Home") {
+                iconName = focused ? "ios-home" : "ios-home-outline";
+                size = focused ? size + 5 : size;
+              } else if (route.name === "Search") {
+                iconName = focused ? "search" : "search-outline";
+                size = focused ? size + 5 : size;
+              } else if (route.name === "Cart") {
+                iconName = focused ? "cart" : "cart-outline";
+                size = focused ? size + 5 : size;
+              } else if (route.name === "Account") {
+                iconName = focused ? "people" : "people-outline";
+                size = focused ? size + 5 : size;
+              }
+              return <Ionic name={iconName} size={size} colours={colours} />;
+            },
+          })}
+        >
+          <Tab.Screen name="Home" component={Home} />
+          <Tab.Screen name="Search" component={Search} />
+          <Tab.Screen name="Cart" component={Cart} />
+          <Tab.Screen name="Account" component={Account} />
+        </Tab.Navigator>
+      </NavigationContainer>
+  </>
   );
 };
