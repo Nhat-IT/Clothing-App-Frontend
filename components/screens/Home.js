@@ -24,7 +24,7 @@ const Item = ({ title, data }) => (
   <View style={{ borderRadius: 20 }}>
     <TouchableHighlight
       onPress={() =>
-        navigation.navigate('Search')
+        console.log(data)
       }
       underlayColor={"#e7e9eb"}
       style={styles.touch}
@@ -53,7 +53,9 @@ const Home = (navigation) => {
     setProducts(productList);
   };
 
-  const renderItem = ({ item, navigation }) => <Item title={item} data={navigation}/>;
+
+  console.log(navigation)
+  const renderItem = ({ item }) => <Item title={item} data={navigation}/>;
   return (
     <>
       <SafeAreaView style={styles.container}>
