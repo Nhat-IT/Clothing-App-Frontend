@@ -20,7 +20,6 @@ const ProductInfo = ({ route, navigation }) => {
         return;
       }
     }
-    console.log(product);
   };
 
   useEffect(() => {

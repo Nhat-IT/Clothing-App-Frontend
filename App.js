@@ -21,7 +21,7 @@ function HomeStackScreen() {
         headerShown: false,
       }}
     >
-      <HomeStack.Screen name="Home" component={Home} />
+      <HomeStack.Screen name="SubHome" component={Home} />
       <HomeStack.Screen name="ProductInfo" component={ProductInfo} />
     </HomeStack.Navigator>
   );
