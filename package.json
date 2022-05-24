@@ -24,6 +24,7 @@
     "react-native-del": "^0.0.2",
     "react-native-flatlist-slider": "^1.0.6",
     "react-native-gesture-handler": "^2.4.2",
+    "react-native-ionicons": "^4.6.5",
     "react-native-safe-area-context": "^4.2.4",
     "react-native-screens": "~3.11.1",
     "react-native-slideshow": "^1.0.1",

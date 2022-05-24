@@ -35,6 +35,7 @@ export const Items = [
       require("../../assets/images/1.2.jpg"),
       require("../../assets/images/1.3.jpg"),
     ],
+    rate: 4.5
   },
   {
     id: 2,
@@ -62,6 +63,7 @@ export const Items = [
       require("../../assets/images/2.2.jpg"),
       require("../../assets/images/2.3.jpg"),
     ],
+    rate: 2.5
   },
   {
     id: 3,
@@ -89,6 +91,7 @@ export const Items = [
       require("../../assets/images/3.2.jpg"),
       require("../../assets/images/3.3.jpg"),
     ],
+    rate: 5
   },
   {
     id: 4,
@@ -116,6 +119,7 @@ export const Items = [
       require("../../assets/images/4.2.jpg"),
       require("../../assets/images/4.3.jpg"),
     ],
+    rate: 1
   },
   {
     id: 5,
@@ -143,6 +147,7 @@ export const Items = [
       require("../../assets/images/5.2.jpg"),
       require("../../assets/images/5.3.jpg"),
     ],
+    rate: 2
   },
   {
     id: 6,
@@ -170,6 +175,7 @@ export const Items = [
       require("../../assets/images/6.2.jpg"),
       require("../../assets/images/6.3.jpg"),
     ],
+    rate: 4
   },
   {
     id: 7,
@@ -197,6 +203,7 @@ export const Items = [
       require("../../assets/images/7.2.jpg"),
       require("../../assets/images/7.3.jpg"),
     ],
+    rate: 3
   },
   {
     id: 8,
@@ -224,6 +231,7 @@ export const Items = [
       require("../../assets/images/8.2.jpg"),
       require("../../assets/images/8.3.jpg"),
     ],
+    rate: 2.5
   },
   {
     id: 9,
@@ -251,6 +259,7 @@ export const Items = [
       require("../../assets/images/9.2.jpg"),
       require("../../assets/images/9.3.jpg"),
     ],
+    rate: 1
   },
   {
     id: 10,
@@ -278,6 +287,7 @@ export const Items = [
       require("../../assets/images/10.2.jpg"),
       require("../../assets/images/10.3.jpg"),
     ],
+    rate: 5
   },
   {
     id: 11,
@@ -305,6 +315,7 @@ export const Items = [
       require("../../assets/images/11.2.jpg"),
       require("../../assets/images/11.3.jpg"),
     ],
+    rate: 4
   },
   {
     id: 12,
@@ -332,6 +343,7 @@ export const Items = [
       require("../../assets/images/12.2.jpg"),
       require("../../assets/images/12.3.jpg"),
     ],
+    rate: 3
   },
   {
     id: 13,
@@ -359,6 +371,7 @@ export const Items = [
       require("../../assets/images/13.2.jpg"),
       require("../../assets/images/13.3.jpg"),
     ],
+    rate: 3.5
   },
   {
     id: 14,
@@ -386,5 +399,6 @@ export const Items = [
       require("../../assets/images/14.2.jpg"),
       require("../../assets/images/14.3.jpg"),
     ],
+    rate: 5
   },
 ];
