@@ -55,7 +55,15 @@ const TabNavigator = ()=>{
     })}
   >
     <Tab.Screen name="Home" component={Home} />
-    <Tab.Screen name="Search" component={Search} />
+    <Tab.Screen name="Search" component={Search} options={{
+          title: 'Search',
+          
+          headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontFamily : 'SFB',
+        
+          },
+    }} />
     <Tab.Screen name="Cart" component={Cart}  options={{
           title: 'Cart',
           

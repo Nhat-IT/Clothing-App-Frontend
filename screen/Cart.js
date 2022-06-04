@@ -114,7 +114,6 @@ const styles = StyleSheet.create({
         marginVertical : 10
     },
     cartList : {
-        
         flex : 2.5,
     },
     line : {
