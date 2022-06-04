@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     },
     priceText : {
         fontFamily : 'SFB',
-        fontSize : 20,
+        fontSize : 15,
     },
     imageItem : {
         flex : 1,
@@ -59,15 +59,15 @@ const styles = StyleSheet.create({
     infoSection : {
         flex : 1.3,
         flexDirection : 'column',
-        marginVertical : 10,
+        marginVertical : 5,
     },
     textTitle : {
-        fontSize : 20,
+        fontSize : 15,
         fontFamily : 'SFREGULAR'
     }
     ,
     quantityText : {
-        fontSize : 18,
+        fontSize : 15,
         marginRight : 2,
         fontFamily : 'SFREGULAR'
     },
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     },
     bottomSection : {
         marginLeft : 8,
-        marginVertical : 10,
+        marginVertical : 5,
         // backgroundColor : colors.nightRider,
         alignItems : 'center',
         

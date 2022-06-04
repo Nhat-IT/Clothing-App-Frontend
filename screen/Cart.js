@@ -22,7 +22,7 @@ const Cart = ({navigation})=>{
             setItems(data)
         }
         console.log('item',items.length)
-        // getItems()
+        getItems()
     },[navigation])
     return(
         <View style={{backgroundColor : '#ffffff',flex : 1}}>
