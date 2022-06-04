@@ -44,7 +44,7 @@ const Search = ()=>{
         <View style={styles.cateContainer}>
         <ScrollView style={styles.scrollView}>
             {category.map((cate,index)=>(
-                <CateItem cate={cate} last={index+1==category.length}/>
+                <CateItem key={cate.id} cate={cate} last={index+1==category.length}/>
             ))}
             </ScrollView>
         </View>

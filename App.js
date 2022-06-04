@@ -34,7 +34,13 @@ const TabNavigator = ()=>{
   return (
     <Tab.Navigator
     screenOptions={({ route }) => ({
-      
+      tabBarShowLabel : false,
+      tabBarStyle : {
+        height : 70,
+        elevation : 5,
+        shadowOpacity : 0.25,
+        shadowRadius : 3.5
+      },
       tabBarIcon: ({ focused, size, colours }) => {
         let iconName;
         if (route.name === "Home") {
@@ -73,7 +79,15 @@ const TabNavigator = ()=>{
         
           },
     }}/>
-    <Tab.Screen name="Account" component={Account} />
+    <Tab.Screen name="Account" component={Account}  options={{
+          title: 'Account',
+          
+          headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontFamily : 'SFB',
+        
+          },
+    }}/>
   </Tab.Navigator>
   )
 }
@@ -98,23 +112,6 @@ const App = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+
 
 export default App;
