@@ -4,7 +4,7 @@ import { TouchableOpacity,View,Text,StyleSheet } from "react-native";
 const TypeItem = ({ type,selectIndex,onTypeClick,index})=>{
     return(
         <TouchableOpacity 
-        style={[styles.typeItem,{backgroundColor : selectIndex == index ? colors.nightRider : colors.ligthGray}]}
+        style={[styles.typeItem,{backgroundColor : selectIndex == index ? colors.red : colors.ligthGray}]}
         onPress={()=>{onTypeClick(index,type.id)}}>
         <View 
        >

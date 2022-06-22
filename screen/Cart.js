@@ -5,10 +5,16 @@ import CartItem from '../components/cartItem';
 import  {DbService}  from '../service/db';
 import CustomerButton from '../components/customButton';
 import UNIQLO from '../assets/icon/UNIQLO.svg'
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const Cart = ({navigation})=>{
     const [items,setItems] = useState([])
     const [total,setTotal] = useState(0.0)
-    
+    const getCart = async ()=>{
+        const value = await AsyncStorage.getItem('cart')
+        if(value != null){
+            console.log(value)
+        }
+    }
     useEffect(()=> {
         const getItems = ()=>{
             let total = 0;
@@ -21,8 +27,14 @@ const Cart = ({navigation})=>{
            
             setItems(data)
         }
+      
         console.log('item',items.length)
         getItems()
+        const unsubscribe = navigation.addListener('focus', () => {
+            getCart()
+          });
+      
+          return unsubscribe;
     },[navigation])
     return(
         <View style={{backgroundColor : '#ffffff',flex : 1}}>
@@ -56,14 +68,13 @@ const Cart = ({navigation})=>{
                     backgroundColor : colors.nightRider,
                     borderColor:'red',
                     borderRadius:10,
-               
                     marginHorizontal : 5,
                     paddingVertical : 12,
                     justifyContent: 'center', 
                     alignItems:'center'
                     }}
                     onPress = { () => 
-                   console.log('hello world')}
+                   navigation.navigate('Purchase')}
                     > 
         <Text style={{color : colors.white,fontFamily : 'SFSB',fontSize : 20}}>Order</Text>
     </TouchableOpacity>

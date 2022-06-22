@@ -1,24 +1,38 @@
-import React from "react";
-import {StyleSheet,View,Image,Text} from 'react-native'
+import React,{useState} from "react";
+import {StyleSheet,View,Image,Text,TouchableOpacity} from 'react-native'
 import colors from "../assets/colors";
 import Record from '../assets/icon/record.svg'
 import Radio from '../assets/icon/radio.svg'
 
-// import { color } from "react-native-reanimated";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 const CartItem = ({cart})=>{
-    console.log('cartItem',cart)
+    const removeFromCarrt = async ()=>{
+        const value = await AsyncStorage.getItem('cart')
+        const datas = JSON.parse(value)
+        const newData = datas.filter(d=>d.productID != cart.productID)
+        await AsyncStorage.setItem('cart',JSON.stringify(newData))
+    }
     return (
         <View style={styles.cartItemContainer}> 
             <Image 
               style={styles.imageItem}
               source={{uri : cart.imageUrl}}/>
               <View style={styles.infoSection}>
-                  <View style={styles.cartTitle}>
-                     
-                       <Text style={{fontFamily : 'SFSB'}} >{cart.name}</Text>
-                       <Text style={{fontFamily : 'SFSB'}}>{cart.category}</Text>
-                  </View>
-                  
+                  <View style={styles.topItem}>
+                        <View style={styles.cartTitle}>
+                           
+                             <Text style={{fontFamily : 'SFSB'}} >{cart.name}</Text>
+                             <Text style={{fontFamily : 'SFSB'}}>{cart.category}</Text>
+                        </View>
+                        <View>
+                          <TouchableOpacity style={styles.xIcon}
+                          onPress={removeFromCarrt}>
+                            <Text style={styles.xText}>X</Text>
+                          </TouchableOpacity>
+                           
+                        </View>
+                  </View>  
                   <View style={styles.colorSection}>
                       <Record width={50} height={50} fill={cart.color.code}/>
                       <Text  style={{fontFamily : 'SFSB'}}>{cart.color.name}</Text>
@@ -97,7 +111,24 @@ const styles = StyleSheet.create({
         
         flexDirection : 'row',
         justifyContent : 'space-between'
+    },
+    topItem :{
+        flexDirection : 'row',
+        justifyContent : 'space-between',
+        alignContent : 'center'
+    },
+    xText : {
+        fontFamily : "SFB",
+        fontSize : 16,
+        color : colors.white
+    },
+    xIcon : {
+        paddingHorizontal : 5,
+        paddingVertical : 2,
+        backgroundColor : colors.red,
+        borderRadius : 2,
     }
+
   });
 
 export default CartItem;
