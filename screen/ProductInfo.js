@@ -292,7 +292,8 @@ import colors from "../assets/colors.js";
                 {product.size
                   ? Object.keys(product.size).map((item,index) => {
                       return (
-                        <TouchableOpacity
+                        <TouchableOpacity key={index}
+                        disabled={product.size[Object.keys(product.size)[index]] == 0 ? true : false}
                           onPress={() => {
                             if(product.size[Object.keys(product.size)[index]] != 0){
                             setSelectSize(index)

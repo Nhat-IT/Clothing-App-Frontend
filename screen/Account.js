@@ -1,16 +1,22 @@
 import React from 'react';
 import {View,Dimensions,Text,Image,StyleSheet,TouchableOpacity} from 'react-native'
-
+import { useNavigation } from '@react-navigation/native';
 import colors from '../assets/colors';
 import Camera from '../assets/icon/camera.svg'
-const CardItem = ({text,onClick,last})=>{
+const CardItem = ({text,onClick,last,onPress})=>{
   return(
+    <TouchableOpacity onPress={onPress}>
       <View style={[styles.cardItem,{borderBottomWidth : last ? 2 : 0}]}>
           <Text style={styles.cardText}>{text}</Text>
       </View>
+      </TouchableOpacity>
   )
 }
 const Account = ()=>{
+  const navigation = useNavigation();
+  const onPressPer = ()=>{
+    navigation.navigate('UserInfo')
+  }
     return(
         <View style={{flex : 1,backgroundColor : colors.white}}>
           <View style={styles.accountContainer}>
@@ -23,7 +29,7 @@ const Account = ()=>{
              <Text style={{fontFamily : 'SFB',fontSize : 10 }}>Add a photo</Text>
             </TouchableOpacity>
         
-             <CardItem text={"Personal data"} />
+             <CardItem text={"Personal data"}  onPress={onPressPer}/>
              <CardItem text={"Address"} />
              <CardItem text={"My orders"} last={true}/>
           
