@@ -1,5 +1,6 @@
 {
   "expo": {
+<<<<<<< HEAD
     "name": "app-test",
     "slug": "app-test",
     "version": "1.0.0",
@@ -8,4 +9,37 @@
     ]
   },
   "name": "app-test"
+=======
+    "name": "ClothingApp",
+    "slug": "ClothingApp",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "package": "com.vilayded.ClothingApp"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+>>>>>>> Vilayded
 }

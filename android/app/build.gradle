@@ -141,11 +141,19 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
+<<<<<<< HEAD
         applicationId "com.apptest"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+=======
+        applicationId 'com.vilayded.ClothingApp'
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "1.0.0"
+>>>>>>> Vilayded
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
 
         if (isNewArchitectureEnabled()) {
@@ -163,7 +171,11 @@ android {
                     cppFlags "-std=c++17"
                     // Make sure this target name is the same you specify inside the
                     // src/main/jni/Android.mk file for the `LOCAL_MODULE` variable.
+<<<<<<< HEAD
                     targets "apptest_appmodules"
+=======
+                    targets "clothingapp_appmodules"
+>>>>>>> Vilayded
 
                     // Fix for windows limit on number of character in file paths and in command lines
                     if (Os.isFamily(Os.FAMILY_WINDOWS)) {

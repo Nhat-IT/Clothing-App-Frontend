@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 rootProject.name = 'apptest'
+=======
+rootProject.name = 'ClothingApp'
+>>>>>>> Vilayded
 
 apply from: new File(["node", "--print", "require.resolve('expo/package.json')"].execute(null, rootDir).text.trim(), "../scripts/autolinking.gradle");
 useExpoModules()

@@ -10,7 +10,11 @@ include $(CLEAR_VARS)
 LOCAL_PATH := $(THIS_DIR)
 
 # You can customize the name of your application .so file here.
+<<<<<<< HEAD
 LOCAL_MODULE := apptest_appmodules
+=======
+LOCAL_MODULE := clothingapp_appmodules
+>>>>>>> Vilayded
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)
 LOCAL_SRC_FILES := $(wildcard $(LOCAL_PATH)/*.cpp)

@@ -13,7 +13,11 @@ class MainComponentsRegistry
  public:
   // Adapt it to the package you used for your Java class.
   constexpr static auto kJavaDescriptor =
+<<<<<<< HEAD
       "Lcom/apptest/newarchitecture/components/MainComponentsRegistry;";
+=======
+      "Lcom/clothingapp/newarchitecture/components/MainComponentsRegistry;";
+>>>>>>> Vilayded
 
   static void registerNatives();
 
