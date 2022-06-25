@@ -8,7 +8,6 @@ import {
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Feather from "react-native-vector-icons/Feather";
 import LinearGradient from "react-native-linear-gradient";
-
 import React, { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { addUser } from "../redux/user/userSlice";

@@ -4,9 +4,8 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import colors from "./assets/colors";
 import React, { useEffect, useState } from "react";
-import {
-  StatusBar,
-} from "react-native";
+import { StatusBar } from "react-native";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import Home from "./screen/Home";
 import Search from "./screen/Search";
 import Cart from "./screen/Cart";
@@ -22,12 +21,13 @@ import UserInfo from "./screen/UserInfo";
 import TextUser from "./screen/TextUser";
 import Signin from "./screen/Signin";
 import Signup from "./screen/Signup";
+import { deleteUser } from "./redux/user/userSlice";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const StackSign = createNativeStackNavigator();
 
 import { store } from "./redux/store";
-import { Provider, useSelector } from "react-redux";
+import { Provider, useDispatch, useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const StackSignNavigator = () => {
@@ -61,8 +61,13 @@ const StackSignNavigator = () => {
 };
 
 const TabNavigator = () => {
+  const dispatch = useDispatch();
   const [token, setToken] = useState("");
-  const userToken = useSelector((state) => state.user.token)
+  const userToken = useSelector((state) => state.user.token);
+
+  const handleLogout = () => {
+    dispatch(deleteUser());
+  };
 
   useEffect(() => {
     setToken(userToken);
@@ -147,6 +152,16 @@ const TabNavigator = () => {
             headerTitleStyle: {
               fontFamily: "SFB",
             },
+            headerRight: () => (
+              <Ionicons
+                name="log-out-outline"
+                size={25}
+                style={{ marginRight: 10 }}
+                onPress={() => {
+                  handleLogout();
+                }}
+              />
+            ),
             tabBarIcon: ({ focused }) => (
               <AccIcon
                 width={35}
