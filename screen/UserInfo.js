@@ -4,6 +4,7 @@ import Camera from '../assets/icon/camera.svg'
 import React, { useEffect, useRef, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import Check from '../assets/icon/check.svg'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const TextCustom = ({title,values,setValues,id,isNumber=false,valueRef}) =>{
     const navigation = useNavigation();
     const handleBack = (data)=>{
@@ -45,6 +46,7 @@ const UserInfo = ()=>{
       <TouchableOpacity onPress={()=>{
         console.log(valueRef.current)
         navigation.goBack()
+        AsyncStorage.removeItem('token')
         
     }}>
          <Check width={30} height={30} fill={"#5B5EA6"}/>

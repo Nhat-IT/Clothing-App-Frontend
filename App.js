@@ -1,24 +1,11 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
 import Ionic from "react-native-vector-icons/Ionicons";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import colors from "./assets/colors";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
-  SafeAreaView,
-  ScrollView,
   StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
 } from "react-native";
 import Home from "./screen/Home";
 import Search from "./screen/Search";
@@ -33,14 +20,53 @@ import Purchase from "./screen/Purchase";
 import ProductInfo from "./screen/ProductInfo";
 import UserInfo from "./screen/UserInfo";
 import TextUser from "./screen/TextUser";
-import Login from "./screen/Login";
+import Signin from "./screen/Signin";
+import Signup from "./screen/Signup";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+const StackSign = createNativeStackNavigator();
 
 import { store } from "./redux/store";
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const StackSignNavigator = () => {
+  return (
+    <StackSign.Navigator>
+      <StackSign.Screen
+        name="Signin"
+        component={Signin}
+        options={{
+          title: "Sign In",
+          headerTitleAlign: "center",
+          headerTitleStyle: {
+            fontFamily: "SFB",
+          },
+        }}
+      />
+      <StackSign.Screen
+        name="Signup"
+        component={Signup}
+        options={{
+          title: "Sign Up",
+          headerTitleAlign: "center",
+          headerTitleStyle: {
+            fontFamily: "SFB",
+          },
+          headerBackVisible: false,
+        }}
+      />
+    </StackSign.Navigator>
+  );
+};
 
 const TabNavigator = () => {
+  const [token, setToken] = useState("");
+  const userToken = useSelector((state) => state.user.token)
+
+  useEffect(() => {
+    setToken(userToken);
+  }, [userToken]);
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -110,25 +136,46 @@ const TabNavigator = () => {
           ),
         }}
       />
-      <Tab.Screen
-        name="Account"
-        component={Account}
-        options={{
-          title: "Account",
+      {token ? (
+        <Tab.Screen
+          name="Account"
+          component={Account}
+          options={{
+            title: "Account",
 
-          headerTitleAlign: "center",
-          headerTitleStyle: {
-            fontFamily: "SFB",
-          },
-          tabBarIcon: ({ focused }) => (
-            <AccIcon
-              width={35}
-              height={35}
-              fill={focused ? colors.nightRider : colors.ligthGray}
-            />
-          ),
-        }}
-      />
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              fontFamily: "SFB",
+            },
+            tabBarIcon: ({ focused }) => (
+              <AccIcon
+                width={35}
+                height={35}
+                fill={focused ? colors.nightRider : colors.ligthGray}
+              />
+            ),
+          }}
+        />
+      ) : (
+        <Tab.Screen
+          name="StackSign"
+          component={StackSignNavigator}
+          options={{
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              fontFamily: "SFB",
+            },
+            headerShown: false,
+            tabBarIcon: ({ focused }) => (
+              <AccIcon
+                width={35}
+                height={35}
+                fill={focused ? colors.nightRider : colors.ligthGray}
+              />
+            ),
+          }}
+        />
+      )}
     </Tab.Navigator>
   );
 };

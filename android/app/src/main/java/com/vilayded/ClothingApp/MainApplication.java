@@ -20,6 +20,16 @@ import expo.modules.ReactNativeHostWrapper;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+// import com.BV.LinearGradient.LinearGradientPackage;
+
+// @Override
+// protected List<ReactPackage> getPackages() {
+//   return Arrays.<ReactPackage>asList(
+//     new MainReactPackage(),
+//     new LinearGradientPackage() // <---- and This! 
+//   );
+// }
+
 public class MainApplication extends Application implements ReactApplication {
   private final ReactNativeHost mReactNativeHost = new ReactNativeHostWrapper(
     this,

@@ -92,6 +92,7 @@ const Cart = ({ navigation }) => {
               }}
               onPress={() => {
                 dispatch(addItem('3'))
+                AsyncStorage.removeItem('token')
               }}
             >
               <Text
