@@ -12,9 +12,8 @@ import Camera from "../assets/icon/camera.svg";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import Check from "../assets/icon/check.svg";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useDispatch, useSelector } from "react-redux";
-const axios = require("axios").default;
+import { useSelector } from "react-redux";
+
 const TextCustom = ({
   title,
   values,
@@ -55,36 +54,8 @@ const TextCustom = ({
   );
 };
 const UserInfo = () => {
+  const userInfo = useSelector(state => state.user.user)
   const [values, setValues] = useState({});
-  const token = useSelector((state) => state.user.token);
-
-  const getUser = (tokenUser) => {
-    axios
-      .get("http://192.168.1.11:5500/api/user", {
-        headers: {
-          "auth-token": tokenUser,
-        },
-      })
-      .then(function (response) {
-        // handle success
-        console.log("res", response.data);
-        setValues({
-          name: response.data.username,
-          address: response.data.address,
-          phone: response.data.mobile,
-        });
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error);
-      })
-      .then(function () {
-        // always executed
-      });
-  };
-  useEffect(() => {
-    getUser(token);
-  }, [token]);
 
   const navigation = useNavigation();
   const valueRef = useRef(values);
@@ -101,13 +72,8 @@ const UserInfo = () => {
         </TouchableOpacity>
       ),
     });
-    const init = {
-      name: "",
-      address: "",
-      phone: "",
-    };
-    valueRef.current = init;
-    setValues(init);
+    valueRef.current = {name: userInfo.username, address: userInfo.address, phone: userInfo.mobile};
+    setValues({name: userInfo.username, address: userInfo.address, phone: userInfo.mobile});
   }, []);
   const onTextChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.values });
@@ -120,7 +86,7 @@ const UserInfo = () => {
           onPress={() => console.log("hello world")}
         >
           <Image
-            style={{ width: "100%", height: "100%" ,borderRadius: 250}}
+            style={{ width: "100%", height: "100%", borderRadius: 250 }}
             source={{
               uri: "https://scontent.fdad3-6.fna.fbcdn.net/v/t1.15752-9/288526138_690744288893953_8128935241550054277_n.png?_nc_cat=105&ccb=1-7&_nc_sid=ae9488&_nc_ohc=AWlVLi2dZ_8AX-s1uEL&_nc_ht=scontent.fdad3-6.fna&oh=03_AVKFFaQRy2_BuMDYTnL8vuFkHphJz8xFUAPjq7I9DyAKIg&oe=62DDEA14",
             }}

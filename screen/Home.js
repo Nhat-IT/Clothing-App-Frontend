@@ -10,59 +10,122 @@ import {
   TouchableHighlight,
   Dimensions,
 } from "react-native";
+import Loading from "../components/Loading";
 import { COLOURS, Items } from "../service/dbNhat.js";
+import { useDispatch, useSelector } from "react-redux";
 import Ionic from "react-native-vector-icons/Ionicons";
+import { addUser } from "../redux/user/userSlice";
+import LottieView from "lottie-react-native";
+
+const axios = require("axios").default;
 
 const windowWidth = Dimensions.get("window").width;
-const Item = ({ title }) => {
-  return (
-    <View style={styles.item}>
-      <Image source={title.productImage} style={styles.imageItem} />
-      <Text style={styles.title}>{title.name}</Text>
-      <Ionic name="heart-outline" />
-      <Text style={{ width: 100, fontFamily: "SFSB" }}>Đ {title.price}</Text>
-    </View>
-  );
-};
 
 const Home = ({ navigation }) => {
+  const dispatch = useDispatch();
   const [products, setProducts] = useState([]);
-  useEffect(() => {
-    getDataFromDatabase = () => {
-      let productList = [];
-      for (let index = 0; index < Items.length; index++) {
-        console.log(Items[index].images);
-        productList.push(Items[index]);
-      }
-      setProducts(productList);
-    };
+  const [isLoading, setIsLoading] = useState(true);
+  const [values, setValues] = useState({});
+  const token = useSelector((state) => state.user.token);
+  const getUser = (tokenUser) => {
+    axios
+      .get("http://192.168.1.11:5500/api/user", {
+        headers: {
+          "auth-token": tokenUser,
+        },
+      })
+      .then(function (response) {
+        // handle success
+        dispatch(addUser(response.data));
+        setValues({
+          name: response.data.username,
+          address: response.data.address,
+          phone: response.data.mobile,
+        });
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
+  };
 
-    getDataFromDatabase();
-  }, [navigation]);
+  const getAllProducts = () => {
+    console.log("getAllProducts");
+    axios
+      .get("http://192.168.1.11:5500/api/product")
+      .then(function (response) {
+        // handle success
+        setProducts(response.data.data);
+        setIsLoading(false)
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
+  };
+
+  useEffect(() => {
+    getUser(token);
+    getAllProducts();
+  }, [token]);
+
+  useEffect(() => {}, [navigation]);
+
+  const Item = ({ title }) => {
+    return (
+      <View style={styles.item}>
+        <Image
+          source={{ uri: `http://192.168.1.11:5500/${title.images.url}` }}
+          style={styles.imageItem}
+        />
+        <Text style={styles.title}>{title.product.nameProduct}</Text>
+        <Ionic name="heart-outline" />
+        <Text style={{ width: 100, fontFamily: "SFSB" }}>
+          {title.product.price} Đ
+        </Text>
+      </View>
+    );
+  };
 
   return (
     <>
       <SafeAreaView style={styles.container}>
-        <FlatList
-          numColumns={2}
-          data={products}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => {
-            return (
-              <>
-                <TouchableHighlight
-                  onPress={() =>
-                    navigation.navigate("ProductInfo", { productID: item.id })
-                  }
-                  underlayColor={"#e7e9eb"}
-                  style={styles.touch}
-                >
-                  <Item title={item} />
-                </TouchableHighlight>
-              </>
-            );
-          }}
-        />
+        {!isLoading ? (
+          <>
+            <FlatList
+              numColumns={2}
+              data={products}
+              keyExtractor={(item) => item.product.id}
+              renderItem={({ item }) => {
+                return (
+                  <>
+                    <TouchableHighlight
+                      onPress={() =>
+                        navigation.navigate("ProductInfo", {
+                          productID: item.product.id,
+                        })
+                      }
+                      underlayColor={"#e7e9eb"}
+                      style={styles.touch}
+                    >
+                      <Item title={item} key={item.id} />
+                    </TouchableHighlight>
+                  </>
+                );
+              }}
+            />
+          </>
+        ) : (
+          <View style={{ width: '100%', height: '100%'}}>
+            <Loading />
+          </View>
+        )}
       </SafeAreaView>
     </>
   );
@@ -83,10 +146,11 @@ const styles = StyleSheet.create({
   title: {
     width: 100,
     fontSize: 12,
+    height: 50,
   },
   imageItem: {
     marginBottom: 10,
-    maxWidth: windowWidth * 0.4,
+    width: 150,
     height: 180,
     borderRadius: 10,
   },

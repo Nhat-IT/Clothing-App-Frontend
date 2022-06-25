@@ -10,7 +10,7 @@ import Feather from "react-native-vector-icons/Feather";
 import LinearGradient from "react-native-linear-gradient";
 import React, { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { addUser } from "../redux/user/userSlice";
+import { addToken, addUser } from "../redux/user/userSlice";
 import { useDispatch } from "react-redux";
 const axios = require("axios").default;
 
@@ -26,14 +26,13 @@ const Signin = ({ navigation }) => {
   const handleLogin = async (username, password) => {
     const data = {
       username,
-      password
+      password,
     };
     // await AsyncStorage.setItem('token', JSON.stringify("123"))
     await axios
       .post("http://192.168.1.11:5500/api/user/login", data)
       .then(function (response) {
-        console.log("res", response.data);
-        dispatch(addUser(response.data));
+        dispatch(addToken(response.data));
       })
       .catch(function (error) {
         console.log(error);
@@ -41,7 +40,6 @@ const Signin = ({ navigation }) => {
   };
 
   const textInputChange = (val) => {
-    console.log("username", data.username);
     if (val.length !== 0) {
       setData({
         ...data,
@@ -65,7 +63,6 @@ const Signin = ({ navigation }) => {
   };
 
   const updateSecureTextEntry = () => {
-    console.log("a");
     setData({
       ...data,
       secureTextEntry: !data.secureTextEntry,
@@ -76,50 +73,51 @@ const Signin = ({ navigation }) => {
     <View style={styles.footer}>
       <Text style={[styles.text_footer]}>Username</Text>
       <View style={styles.action}>
-        <FontAwesome name="user-o" color="green" size={20} />
+        <FontAwesome name="user-o" color="#434343" size={20} />
         <TextInput
           placeholder="Your Username"
-          placeholderTextColor="#666666"
+          placeholderTextColor="#434343"
           style={[styles.textInput]}
           autoCapitalize="none"
           onChangeText={(val) => textInputChange(val)}
         />
         {data.check_textInputChange === true ? (
-          <Feather name="check-circle" color="green" size={20} />
+          <Feather name="check-circle" color="#434343" size={20} />
         ) : null}
       </View>
 
       <Text style={[styles.text_footer, { marginTop: 35 }]}>Password</Text>
       <View style={styles.action}>
-        <FontAwesome name="lock" color="green" size={20} />
+        <FontAwesome name="lock" color="#434343" size={20} />
         <TextInput
           placeholder="Your Password"
-          placeholderTextColor="#666666"
+          placeholderTextColor="#434343"
           style={[styles.textInput]}
           autoCapitalize="none"
           secureTextEntry={data.secureTextEntry ? true : false}
           onChangeText={(val) => handlePasswordChange(val)}
         />
         <TouchableOpacity onPress={updateSecureTextEntry}>
-          <Feather name="eye-off" color="green" size={20} />
+          <Feather name="eye-off" color="#434343" size={20} />
         </TouchableOpacity>
       </View>
 
       <View style={styles.button}>
-        <TouchableOpacity
-          style={[styles.signIn, { backgroundColor: "#02c39a" }]}
-          onPress={() => {
-            console.log(data);
-            handleLogin(data.username, data.password);
-          }}
-        >
-          <Text style={[styles.textSign, { color: "black" }]}>Sign In</Text>
-        </TouchableOpacity>
+        <LinearGradient colors={["#000000", "#434343"]} style={[styles.signIn]}>
+          <TouchableOpacity
+            style={[styles.signIn]}
+            onPress={() => {
+              handleLogin(data.username, data.password);
+            }}
+          >
+            <Text style={[styles.textSign, { color: "white" }]}>Sign In</Text>
+          </TouchableOpacity>
+        </LinearGradient>
         <TouchableOpacity
           style={[
             styles.signIn,
             {
-              borderColor: "#009387",
+              borderColor: "#434343",
               borderWidth: 1,
               marginTop: 15,
             },

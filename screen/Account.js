@@ -34,6 +34,7 @@ const CardItem = ({ text, onClick, last, onPress, name }) => {
   );
 };
 const Account = () => {
+
   const navigation = useNavigation();
   const onPressPer = () => {
     navigation.navigate("UserInfo");

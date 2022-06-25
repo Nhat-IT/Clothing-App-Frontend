@@ -1,7 +1,7 @@
 import Ionic from "react-native-vector-icons/Ionicons";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-
+import SplashScreen from 'react-native-splash-screen'
 import colors from "./assets/colors";
 import React, { useEffect, useState } from "react";
 import { StatusBar } from "react-native";
@@ -21,7 +21,7 @@ import UserInfo from "./screen/UserInfo";
 import TextUser from "./screen/TextUser";
 import Signin from "./screen/Signin";
 import Signup from "./screen/Signup";
-import { deleteUser } from "./redux/user/userSlice";
+import { deleteToken, deleteUser } from "./redux/user/userSlice";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const StackSign = createNativeStackNavigator();
@@ -29,6 +29,7 @@ const StackSign = createNativeStackNavigator();
 import { store } from "./redux/store";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 const StackSignNavigator = () => {
   return (
@@ -66,6 +67,7 @@ const TabNavigator = () => {
   const userToken = useSelector((state) => state.user.token);
 
   const handleLogout = () => {
+    dispatch(deleteToken());
     dispatch(deleteUser());
   };
 
@@ -195,6 +197,7 @@ const TabNavigator = () => {
   );
 };
 const App = () => {
+
   return (
     <>
       <StatusBar backgroundColor="#fff" barStyle="dark-content" />
