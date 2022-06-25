@@ -33,6 +33,7 @@ import Purchase from "./screen/Purchase";
 import ProductInfo from "./screen/ProductInfo";
 import UserInfo from "./screen/UserInfo";
 import TextUser from './screen/TextUser'
+import MyOrder from "./screen/MyOrder";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -128,6 +129,7 @@ const App = () => {
         <Stack.Screen name="ProductInfo" component={ProductInfo} options={
         {headerShown : false,}}/>
         <Stack.Screen name="TextUser" component={TextUser} />
+        <Stack.Screen name="MyOrder" component={MyOrder} />
        </Stack.Navigator>
       </NavigationContainer>
   </>

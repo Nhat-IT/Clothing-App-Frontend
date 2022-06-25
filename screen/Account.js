@@ -17,6 +17,9 @@ const Account = ()=>{
   const onPressPer = ()=>{
     navigation.navigate('UserInfo')
   }
+  const onPressMyOrder = ()=>{
+    navigation.navigate('MyOrder')
+  }
     return(
         <View style={{flex : 1,backgroundColor : colors.white}}>
           <View style={styles.accountContainer}>
@@ -30,8 +33,7 @@ const Account = ()=>{
             </TouchableOpacity>
         
              <CardItem text={"Personal data"}  onPress={onPressPer}/>
-             <CardItem text={"Address"} />
-             <CardItem text={"My orders"} last={true}/>
+             <CardItem text={"My orders"} last={true} onPress={onPressMyOrder}/>
           
           </View>
         </View>

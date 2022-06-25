@@ -117,8 +117,48 @@ const getType = ()=>{
     ]
     return dummyCategory
 }
+const getMyorder = ()=>{
+    const orderDummy = [
+        {
+            id : 1,
+            created_at : new Date(Date.now()).toDateString(),
+            modified_at : new Date(Date.now()).toDateString(),
+            amount : 50000,
+            status  : 'Shipping',
+            name  : 'Touk',
+            address  : '60 Ngo Si Lien',
+            userId  : 2,
+            mobile : '0343409259'
+        },
+        {
+            id : 2,
+            created_at : new Date(Date.now()).toDateString(),
+            modified_at : new Date(Date.now()).toDateString(),
+            amount : 60000,
+            status  : 'Received',
+            name  : 'Ning',
+            address  : '60 Ngo Si Lien',
+            userId  : 2,
+            mobile : '0343409259'
+        },
+        {
+            id : 3,
+            created_at : new Date(Date.now()).toDateString(),
+            modified_at :new Date(Date.now()).toDateString(),
+            amount : 7000000,
+            status  : 'Received',
+            name  : 'Ning',
+            address  : '60 Ngo Si Lien,Hòa Khánh Bắc,Liên Chiểu, Đà Nẵng',
+            userId  : 2,
+            mobile : '0343409259'
+        }
+       
+    ]
+    return orderDummy;
+}
 export const DbService = {
     getCartDummy,
     getType,
-    allCategory
+    allCategory,
+    getMyorder
 }
