@@ -6,7 +6,6 @@ import {
   View,
   FlatList,
   SafeAreaView,
-  
   Image,
   TouchableHighlight,
   Dimensions,
@@ -18,28 +17,28 @@ const windowWidth = Dimensions.get("window").width;
 const Item = ({ title }) => {
   return (
     <View style={styles.item}>
-    <Image source={title.productImage} style={styles.imageItem} />
-    <Text style={styles.title}>{title.name}</Text>
-    <Ionic name="heart-outline" />
-    <Text style={{width: 100,fontFamily : "SFSB"}}>Đ {title.price}</Text>
-  </View>
-  )
+      <Image source={title.productImage} style={styles.imageItem} />
+      <Text style={styles.title}>{title.name}</Text>
+      <Ionic name="heart-outline" />
+      <Text style={{ width: 100, fontFamily: "SFSB" }}>Đ {title.price}</Text>
+    </View>
+  );
 };
 
-const Home = ({navigation}) => {
+const Home = ({ navigation }) => {
   const [products, setProducts] = useState([]);
   useEffect(() => {
+    getDataFromDatabase = () => {
+      let productList = [];
+      for (let index = 0; index < Items.length; index++) {
+        console.log(Items[index].images);
+        productList.push(Items[index]);
+      }
+      setProducts(productList);
+    };
+
     getDataFromDatabase();
   }, [navigation]);
-
-  getDataFromDatabase = () => {
-    let productList = [];
-    for (let index = 0; index < Items.length; index++) {
-      console.log(Items[index].images)
-      productList.push(Items[index]);
-    }
-    setProducts(productList);
-  };
 
   return (
     <>
@@ -52,10 +51,11 @@ const Home = ({navigation}) => {
             return (
               <>
                 <TouchableHighlight
-                  onPress={() => navigation.navigate('ProductInfo', {productID: item.id})}
+                  onPress={() =>
+                    navigation.navigate("ProductInfo", { productID: item.id })
+                  }
                   underlayColor={"#e7e9eb"}
                   style={styles.touch}
-
                 >
                   <Item title={item} />
                 </TouchableHighlight>
@@ -71,9 +71,8 @@ const Home = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-   backgroundColor : colors.white,
-    alignItems : "center"
-    
+    backgroundColor: colors.white,
+    alignItems: "center",
   },
   item: {
     height: 300,
@@ -86,7 +85,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   imageItem: {
-    marginBottom : 10,
+    marginBottom: 10,
     maxWidth: windowWidth * 0.4,
     height: 180,
     borderRadius: 10,
