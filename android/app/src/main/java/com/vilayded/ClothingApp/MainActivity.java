@@ -9,17 +9,6 @@ import com.facebook.react.ReactRootView;
 
 import expo.modules.ReactActivityDelegateWrapper;
 
-import com.BV.LinearGradient.LinearGradientPackage;
-
-// @Override
-// protected List<ReactPackage> getPackages() {
-//   return Arrays.<ReactPackage>asList(
-//     new MainReactPackage(),
-//     new LinearGradientPackage() // <---- and This! 
-//   );
-// }
-
-
 public class MainActivity extends ReactActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {

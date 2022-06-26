@@ -16,16 +16,20 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Entypo from "react-native-vector-icons/Entypo";
 import Ionic from "react-native-vector-icons/Ionicons";
 import colors from "../assets/colors.js";
+import Loading from "../components/Loading.js";
+import SplashScreen from 'react-native-splash-screen'
+const axios = require("axios").default;
 
 const ProductInfo = ({ route, navigation }) => {
-  const { productID } = route.params;
+  const productID = route.params.productID;
   const width = Dimensions.get("window").width;
   const scrollX = new Animated.Value(0);
 
   let position = Animated.divide(scrollX, width);
 
-  let [product, setProduct] = useState({ a: 1 });
-  let rates = [];
+  let [product, setProduct] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+  let rates = [1, 1, 1, 1, 1];
   let [icon, setIcon] = useState("heart");
   const [selectedSize, setSelectSize] = useState(-1);
   const changeNameIcon = () => {
@@ -55,7 +59,6 @@ const ProductInfo = ({ route, navigation }) => {
             datas.push(item);
           }
           await AsyncStorage.setItem("cart", JSON.stringify(datas));
-
         } else {
           await AsyncStorage.setItem("cart", JSON.stringify([item]));
         }
@@ -67,40 +70,43 @@ const ProductInfo = ({ route, navigation }) => {
     }
   };
 
-  getRate = () => {
-    let arrRate = [];
-    let rate = product.rate;
-    do {
-      arrRate.push(1);
-      rate = rate - 1;
-    } while (rate > 0.5);
-    if (rate == 0.5) arrRate.push(0.5);
-    arrRate = arrRate.concat(new Array(5 - arrRate.length).fill(0));
-    rates = arrRate;
-  };
+  // getRate = () => {
+  //   let arrRate = [];
+  //   let rate = product.rate;
+  //   do {
+  //     arrRate.push(1);
+  //     rate = rate - 1;
+  //   } while (rate > 0.5);
+  //   if (rate == 0.5) arrRate.push(0.5);
+  //   arrRate = arrRate.concat(new Array(5 - arrRate.length).fill(0));
+  //   rates = arrRate;
+  // };
 
-  const getDataFromDatabase = async () => {
-    for (let i = 0; i < Items.length; i++) {
-      if (Items[i].id === productID) {
-        let index = 0;
-        for (const s in Items[i].size) {
-          if (Items[i].size[s] > 0) {
-            setSelectSize(index);
-            break;
-          }
-          index++;
-        }
-        await setProduct(Items[i]);
-        return;
-      }
-    }
+  const getProductFromDatabase = async () => {
+    axios
+      .get(`http://192.168.1.11:5500/api/product/${productID}`)
+      .then(function (response) {
+        // handle success
+        console.log("hello")
+        setProduct(response.data);
+        SplashScreen.hide();
+        setIsLoading(false);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
   };
 
   useEffect(() => {
-    getDataFromDatabase();
+
+    getProductFromDatabase();
   }, [navigation]);
 
-  getRate();
+  // getRate();
   const renderProduct = ({ item, index }) => {
     return (
       <View
@@ -134,210 +140,94 @@ const ProductInfo = ({ route, navigation }) => {
       backgroundColor={COLOURS.white}
       position="relative"
     >
-      <ScrollView>
-        <View
-          style={{
-            width: "100%",
-            backgroundColor: "#eceff1",
-            borderBottomRightRadius: 20,
-            borderBottomLeftRadius: 20,
-            position: "relative",
-            justifyContent: "center",
-            alignItems: "center",
-            marginBottom: 4,
-          }}
-        >
+      {!isLoading ? (
+        <ScrollView>
           <View
             style={{
               width: "100%",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              paddingTop: 16,
-              paddingLeft: 16,
-            }}
-          >
-            <TouchableOpacity
-              onPress={() => {
-                navigation.goBack("Home");
-              }}
-            >
-              <Entypo
-                name="chevron-left"
-                style={{
-                  fontSize: 18,
-                  color: COLOURS.backgroundDark,
-                  padding: 12,
-                  backgroundColor: COLOURS.white,
-                  borderRadius: 10,
-                }}
-              />
-            </TouchableOpacity>
-          </View>
-          <FlatList
-            data={product.images ? product.images : null}
-            horizontal
-            snapToInterval={width} //Trượt 1 khoảng bằng độ rộng màn hình
-            decelerationRate={0.8} //Tốc độ cuộn
-            renderItem={renderProduct}
-            showsHorizontalScrollIndicator={false} // Ẩn thanh trượt
-            bounces={true}
-            onScroll={Animated.event(
-              [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-              { useNativeDriver: false }
-            )}
-          />
-          <View
-            style={{
-              width: "100%",
-              flexDirection: "row",
-              alignItems: "center",
+              backgroundColor: "#eceff1",
+              borderBottomRightRadius: 20,
+              borderBottomLeftRadius: 20,
+              position: "relative",
               justifyContent: "center",
-              marginBottom: 16,
-              marginTop: 32,
-            }}
-          >
-            {product.images
-              ? product.images.map((data, index) => {
-                  let opacity = position.interpolate({
-                    inputRange: [
-                      index - 2,
-                      index - 1,
-                      index,
-                      index + 1,
-                      index + 2,
-                    ],
-                    outputRange: [0.2, 0.2, 1, 0.2, 0.2],
-                    extradata: "clamp",
-                  });
-                  return (
-                    <Animated.View
-                      key={index}
-                      style={{
-                        width: "16%",
-                        height: 3.4,
-                        backgroundColor: COLOURS.black,
-                        opacity,
-                        marginHorizontal: 4,
-                        borderRadius: 100,
-                      }}
-                    ></Animated.View>
-                  );
-                })
-              : null}
-          </View>
-        </View>
-        <View
-          style={{
-            width: "90%",
-            // backgroundColor: "red",
-            marginLeft: "auto",
-            marginRight: "auto",
-          }}
-        >
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
               alignItems: "center",
-              marginTop: 7,
+              marginBottom: 4,
             }}
           >
-            <Text
-              style={{
-                fontSize: 15,
-                width: 240,
-                fontFamily: "Macondo-Regular",
-              }}
-            >
-              {product.name}
-            </Text>
-            <TouchableOpacity onPress={changeNameIcon}>
-              <Ionic name={icon} style={{ fontSize: 20 }} />
-            </TouchableOpacity>
-          </View>
-          <View
-            style={{
-              marginTop: 7,
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-              {product.price} VND
-            </Text>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <View style={{ flexDirection: "row" }}>
-                {rates.map((item) => {
-                  let name =
-                    item == 1
-                      ? "star"
-                      : item == 0.5
-                      ? "star-half-outline"
-                      : "star-outline";
-                  return <Ionic name={name} style={{ fontSize: 17 }} />;
-                })}
-              </View>
-              <Text style={{ marginLeft: 7 }}>{product.rate}</Text>
-            </View>
-          </View>
-          <View style={{ marginTop: 15 }}>
-            <Text style={{ marginBottom: 10, fontWeight: "bold" }}>Size</Text>
             <View
               style={{
-                flexDirection: "row",
                 width: "100%",
-                alignItems: "space-between",
-                justifyContent: "space-around",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                paddingTop: 16,
+                paddingLeft: 16,
               }}
             >
-              {product.size
-                ? Object.keys(product.size).map((item, index) => {
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.goBack("Home");
+                }}
+              >
+                <Entypo
+                  name="chevron-left"
+                  style={{
+                    fontSize: 18,
+                    color: COLOURS.backgroundDark,
+                    padding: 12,
+                    backgroundColor: COLOURS.white,
+                    borderRadius: 10,
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+            <FlatList
+              data={product.images ? product.images : null}
+              horizontal
+              snapToInterval={width} //Trượt 1 khoảng bằng độ rộng màn hình
+              decelerationRate={0.8} //Tốc độ cuộn
+              renderItem={renderProduct}
+              showsHorizontalScrollIndicator={false} // Ẩn thanh trượt
+              bounces={true}
+              onScroll={Animated.event(
+                [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+                { useNativeDriver: false }
+              )}
+            />
+            <View
+              style={{
+                width: "100%",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                marginBottom: 16,
+                marginTop: 32,
+              }}
+            >
+              {product.images
+                ? product.images.map((data, index) => {
+                    let opacity = position.interpolate({
+                      inputRange: [
+                        index - 2,
+                        index - 1,
+                        index,
+                        index + 1,
+                        index + 2,
+                      ],
+                      outputRange: [0.2, 0.2, 1, 0.2, 0.2],
+                      extradata: "clamp",
+                    });
                     return (
-                      <TouchableOpacity
+                      <Animated.View
                         key={index}
-                        disabled={
-                          product.size[Object.keys(product.size)[index]] == 0
-                            ? true
-                            : false
-                        }
-                        onPress={() => {
-                          if (
-                            product.size[Object.keys(product.size)[index]] != 0
-                          ) {
-                            setSelectSize(index);
-                          }
+                        style={{
+                          width: "16%",
+                          height: 3.4,
+                          backgroundColor: COLOURS.black,
+                          opacity,
+                          marginHorizontal: 4,
+                          borderRadius: 100,
                         }}
-                      >
-                        <Text
-                          style={{
-                            width: 50,
-                            height: 50,
-                            textDecorationLine:
-                              product.size[Object.keys(product.size)[index]] ==
-                              0
-                                ? "line-through"
-                                : "none",
-                            backgroundColor:
-                              product.size[Object.keys(product.size)[index]] ==
-                              0
-                                ? colors.ligthGray
-                                : "#e5eddf",
-                            borderRadius: 10,
-                            textAlign: "center",
-                            lineHeight: 50,
-                            fontWeight: "bold",
-                            borderWidth: index == selectedSize ? 3 : 0,
-                            color:
-                              product.size[Object.keys(product.size)[index]] ==
-                              0
-                                ? colors.gray
-                                : colors.black,
-                          }}
-                        >
-                          {item}
-                        </Text>
-                      </TouchableOpacity>
+                      ></Animated.View>
                     );
                   })
                 : null}
@@ -345,46 +235,170 @@ const ProductInfo = ({ route, navigation }) => {
           </View>
           <View
             style={{
-              marginTop: 13,
-            }}
-          >
-            <Text
-              flexDirection="column"
-              style={{ fontWeight: "bold", marginBottom: 7 }}
-            >
-              Mô tả
-            </Text>
-            {product.description
-              ? product.description.map((item) => {
-                  return <Text>+ {item}</Text>;
-                })
-              : null}
-          </View>
-          <TouchableOpacity
-            onPress={() => {
-              addToCart();
-              console.log("Them vao gio")
+              width: "90%",
+              // backgroundColor: "red",
+              marginLeft: "auto",
+              marginRight: "auto",
             }}
           >
             <View
               style={{
-                width: "100%",
-                justifyContent: "center",
+                flexDirection: "row",
+                justifyContent: "space-between",
                 alignItems: "center",
-                height: 50,
-                backgroundColor: COLOURS.black,
-                borderRadius: 10,
-                marginTop: 20,
-                marginBottom: 20,
+                marginTop: 7,
               }}
             >
-              <Text style={{ fontSize: 20, color: COLOURS.white }}>
-                Thêm vào giỏ
+              <Text
+                style={{
+                  fontSize: 15,
+                  width: 240,
+                  fontFamily: "Macondo-Regular",
+                }}
+              >
+                {product.name}
               </Text>
+              <TouchableOpacity onPress={changeNameIcon}>
+                <Ionic name={icon} style={{ fontSize: 20 }} />
+              </TouchableOpacity>
             </View>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
+            <View
+              style={{
+                marginTop: 7,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+                {product.price} VND
+              </Text>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <View style={{ flexDirection: "row" }}>
+                  {rates.map((item) => {
+                    let name =
+                      item == 1
+                        ? "star"
+                        : item == 0.5
+                        ? "star-half-outline"
+                        : "star-outline";
+                    return <Ionic name={name} style={{ fontSize: 17 }} />;
+                  })}
+                </View>
+                <Text style={{ marginLeft: 7 }}>{product.rate}</Text>
+              </View>
+            </View>
+            <View style={{ marginTop: 15 }}>
+              <Text style={{ marginBottom: 10, fontWeight: "bold" }}>Size</Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  width: "100%",
+                  alignItems: "space-between",
+                  justifyContent: "space-around",
+                }}
+              >
+                {product.size
+                  ? Object.keys(product.size).map((item, index) => {
+                      return (
+                        <TouchableOpacity
+                          key={index}
+                          disabled={
+                            product.size[Object.keys(product.size)[index]] == 0
+                              ? true
+                              : false
+                          }
+                          onPress={() => {
+                            if (
+                              product.size[Object.keys(product.size)[index]] !=
+                              0
+                            ) {
+                              setSelectSize(index);
+                            }
+                          }}
+                        >
+                          <Text
+                            style={{
+                              width: 50,
+                              height: 50,
+                              textDecorationLine:
+                                product.size[
+                                  Object.keys(product.size)[index]
+                                ] == 0
+                                  ? "line-through"
+                                  : "none",
+                              backgroundColor:
+                                product.size[
+                                  Object.keys(product.size)[index]
+                                ] == 0
+                                  ? colors.ligthGray
+                                  : "#e5eddf",
+                              borderRadius: 10,
+                              textAlign: "center",
+                              lineHeight: 50,
+                              fontWeight: "bold",
+                              borderWidth: index == selectedSize ? 3 : 0,
+                              color:
+                                product.size[
+                                  Object.keys(product.size)[index]
+                                ] == 0
+                                  ? colors.gray
+                                  : colors.black,
+                            }}
+                          >
+                            {item}
+                          </Text>
+                        </TouchableOpacity>
+                      );
+                    })
+                  : null}
+              </View>
+            </View>
+            <View
+              style={{
+                marginTop: 13,
+              }}
+            >
+              <Text
+                flexDirection="column"
+                style={{ fontWeight: "bold", marginBottom: 7 }}
+              >
+                Mô tả
+              </Text>
+              {product.description
+                ? product.description.map((item) => {
+                    return <Text>+ {item}</Text>;
+                  })
+                : null}
+            </View>
+            <TouchableOpacity
+              onPress={() => {
+                addToCart();
+                console.log("Them vao gio");
+              }}
+            >
+              <View
+                style={{
+                  width: "100%",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: 50,
+                  backgroundColor: COLOURS.black,
+                  borderRadius: 10,
+                  marginTop: 20,
+                  marginBottom: 20,
+                }}
+              >
+                <Text style={{ fontSize: 20, color: COLOURS.white }}>
+                  Thêm vào giỏ
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      ) : (
+        <Loading type="loading"/>
+      )}
     </View>
   );
 };

@@ -15,7 +15,7 @@ import { COLOURS, Items } from "../service/dbNhat.js";
 import { useDispatch, useSelector } from "react-redux";
 import Ionic from "react-native-vector-icons/Ionicons";
 import { addUser } from "../redux/user/userSlice";
-import LottieView from "lottie-react-native";
+import SplashScreen from 'react-native-splash-screen'
 
 const axios = require("axios").default;
 
@@ -122,9 +122,7 @@ const Home = ({ navigation }) => {
             />
           </>
         ) : (
-          <View style={{ width: '100%', height: '100%'}}>
-            <Loading />
-          </View>
+            <Loading type="loadingHome"/>
         )}
       </SafeAreaView>
     </>

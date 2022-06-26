@@ -13,6 +13,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import Check from "../assets/icon/check.svg";
 import { useSelector } from "react-redux";
+import SplashScreen from 'react-native-splash-screen'
 
 const TextCustom = ({
   title,
