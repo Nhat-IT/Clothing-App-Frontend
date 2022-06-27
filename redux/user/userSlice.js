@@ -12,9 +12,6 @@ export const userSlice = createSlice({
   reducers: {
     addUser: (state, { payload }) => {
       state.user = payload;
-      try {
-        
-      } catch {}
     },
     addToken: (state, { payload }) => {
       state.token = payload;
