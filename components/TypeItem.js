@@ -8,7 +8,7 @@ const TypeItem = ({ type,selectIndex,onTypeClick,index})=>{
         onPress={()=>{onTypeClick(index,type.id)}}>
         <View 
        >
-            <Text style={[styles.typeText,{color : selectIndex == index ? colors.white : colors.nightRider}]}>{type.value}</Text>
+            <Text style={[styles.typeText,{color : selectIndex == index ? colors.white : colors.nightRider}]}>{type.title}</Text>
         </View>
         </TouchableOpacity>
     )

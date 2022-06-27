@@ -18,9 +18,12 @@ import Ionic from "react-native-vector-icons/Ionicons";
 import colors from "../assets/colors.js";
 import Loading from "../components/Loading.js";
 import SplashScreen from "react-native-splash-screen";
+import { addItem } from "../redux/shopping-cart/cartItemsSlice.js";
+import { useDispatch } from "react-redux";
 const axios = require("axios").default;
 
 const ProductInfo = ({ route, navigation }) => {
+  const dispatch = useDispatch();
   const productID = route.params.productID;
   const width = Dimensions.get("window").width;
   const scrollX = new Animated.Value(0);
@@ -40,34 +43,18 @@ const ProductInfo = ({ route, navigation }) => {
     }
   };
   const addToCart = async () => {
-    if (selectedSize != -1) {
-      const item = {
-        productID: productID,
+    dispatch(
+      addItem({
+        nameProduct: product.product.nameProduct,
+        detail_product_id: product.size[selectedSize].id,
+        size: product.size[selectedSize].size,
         quantity: 1,
-        size: Object.keys(product.size)[selectedSize],
-      };
-      try {
-        const value = await AsyncStorage.getItem("cart");
-        if (value != null) {
-          const newCart = [];
-          const datas = JSON.parse(value);
-          let isOld = datas.find((c) => c.productID == item.productID);
-
-          if (isOld) {
-            isOld.quantity += item.quantity;
-          } else {
-            datas.push(item);
-          }
-          await AsyncStorage.setItem("cart", JSON.stringify(datas));
-        } else {
-          await AsyncStorage.setItem("cart", JSON.stringify([item]));
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    } else {
-      console.log("out of stock");
-    }
+        price: product.product.price,
+        image: product.images[0].url,
+        colorHex: product.product.colorHex,
+        color: product.product.color,
+      })
+    );
   };
 
   const getRate = () => {
@@ -193,6 +180,7 @@ const ProductInfo = ({ route, navigation }) => {
               )}
             />
             <View
+            key={product.images}
               style={{
                 width: "100%",
                 flexDirection: "row",
@@ -329,7 +317,7 @@ const ProductInfo = ({ route, navigation }) => {
                                     Object.keys(product.size)[index]
                                   ] != 0
                                 ) {
-                                  console.log("index", index)
+                                  console.log("index", index);
                                   setSelectSize(index);
                                 }
                               }}
@@ -374,16 +362,16 @@ const ProductInfo = ({ route, navigation }) => {
                 <View
                   style={{
                     marginTop: 13,
-                    flexDirection:"row"
+                    flexDirection: "row",
                   }}
                 >
-                  <Text
-
-                    style={{ fontWeight: "bold", marginBottom: 7 }}
-                  >
+                  <Text style={{ fontWeight: "bold", marginBottom: 7 }}>
                     Số lượng còn:
                   </Text>
-                  <Text>{'    '}{product.size[selectedSize].quantity}</Text>
+                  <Text>
+                    {"    "}
+                    {product.size[selectedSize].quantity}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -398,13 +386,11 @@ const ProductInfo = ({ route, navigation }) => {
                   </Text>
                   <Text>{product.product.descProduct}</Text>
                 </View>
-                
               </View>
             </ScrollView>
             <TouchableOpacity
               onPress={() => {
                 addToCart();
-                console.log("Them vao gio");
               }}
             >
               <View

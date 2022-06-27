@@ -12,8 +12,10 @@ import Camera from "../assets/icon/camera.svg";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import Check from "../assets/icon/check.svg";
-import { useSelector } from "react-redux";
-import SplashScreen from 'react-native-splash-screen'
+import { useDispatch, useSelector } from "react-redux";
+import { deleteUser, deleteToken } from "../redux/user/userSlice";
+import Loading from "../components/Loading";
+const axios = require("axios").default;
 
 const TextCustom = ({
   title,
@@ -22,6 +24,7 @@ const TextCustom = ({
   id,
   isNumber = false,
   valueRef,
+  editable = false
 }) => {
   const navigation = useNavigation();
   const handleBack = (data) => {
@@ -33,6 +36,7 @@ const TextCustom = ({
     <View style={styles.textInputView}>
       {values[id] != "" ? <Text style={styles.label}>{title}</Text> : <></>}
       <TouchableOpacity
+        disabled={editable}
         onPress={() =>
           navigation.navigate("TextUser", {
             title: title,
@@ -54,8 +58,11 @@ const TextCustom = ({
     </View>
   );
 };
+
 const UserInfo = () => {
-  const userInfo = useSelector(state => state.user.user)
+  const dispatch = useDispatch();
+  const token = useSelector((state) => state.user.token);
+  const userInfo = useSelector((state) => state.user.user);
   const [values, setValues] = useState({});
 
   const navigation = useNavigation();
@@ -65,7 +72,12 @@ const UserInfo = () => {
       headerRight: () => (
         <TouchableOpacity
           onPress={() => {
-            console.log(valueRef.current);
+            updateUser(token, {
+              username: valueRef.current.name,
+              mobile: valueRef.current.phone,
+              address: valueRef.current.address,
+            });
+            console.log(valueRef.current.name);
             navigation.goBack();
           }}
         >
@@ -73,12 +85,35 @@ const UserInfo = () => {
         </TouchableOpacity>
       ),
     });
-    valueRef.current = {name: userInfo.username, address: userInfo.address, phone: userInfo.mobile};
-    setValues({name: userInfo.username, address: userInfo.address, phone: userInfo.mobile});
+    valueRef.current = {
+      name: userInfo.username,
+      address: userInfo.address,
+      phone: userInfo.mobile,
+    };
+    setValues({
+      name: userInfo.username,
+      address: userInfo.address,
+      phone: userInfo.mobile,
+    });
   }, []);
-  const onTextChange = (prop) => (event) => {
-    setValues({ ...values, [prop]: event.target.values });
+
+  const updateUser = (token, data) => {
+    console.log("data", data);
+    axios("http://192.168.1.11:5500/api/user/", {
+      method: "put",
+      headers: { "auth-token": token },
+      data: data,
+    })
+      .then(function (response) {
+        dispatch(deleteToken());
+        dispatch(deleteUser());
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
+
   return (
     <View style={{ flex: 1, backgroundColor: colors.white }}>
       <View style={styles.container}>
@@ -101,6 +136,7 @@ const UserInfo = () => {
           values={values}
           setValues={setValues}
           valueRef={valueRef}
+          editable={true}
         />
         <TextCustom
           title={"Address"}

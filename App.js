@@ -21,6 +21,7 @@ import UserInfo from "./screen/UserInfo";
 import TextUser from "./screen/TextUser";
 import Signin from "./screen/Signin";
 import Signup from "./screen/Signup";
+import MyOrder from "./screen/MyOrder";
 import { deleteToken, deleteUser } from "./redux/user/userSlice";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -29,6 +30,7 @@ const StackSign = createNativeStackNavigator();
 import { store } from "./redux/store";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import ProductCategory from "./screen/ProductCategory";
 
 
 const StackSignNavigator = () => {
@@ -230,6 +232,10 @@ const App = () => {
               options={{ headerShown: false }}
             />
             <Stack.Screen name="TextUser" component={TextUser} />
+            <Stack.Screen name="ProductCate" component={ProductCategory} />
+            <Stack.Screen name="MyOrder" component={MyOrder} options={
+              {title: "My Order", headerTitleAlign: "center",}
+            }/>
           </Stack.Navigator>
         </NavigationContainer>
       </Provider>

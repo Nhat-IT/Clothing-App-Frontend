@@ -33,12 +33,18 @@ const CardItem = ({ text, onClick, last, onPress, name }) => {
     </TouchableOpacity>
   );
 };
+
+
 const Account = () => {
 
   const navigation = useNavigation();
   const onPressPer = () => {
     navigation.navigate("UserInfo");
   };
+
+  const onPressOrder =()=>{
+    navigation.navigate("MyOrder")
+  }
   return (
     <View style={{ flex: 1, backgroundColor: colors.white }}>
       <View style={styles.accountContainer}>
@@ -59,7 +65,7 @@ const Account = () => {
             name="person-outline"
             last={true}
           />
-          <CardItem text={"My orders"} last={true} name="cart-outline" />
+          <CardItem text={"My orders"} last={true} name="cart-outline" onPress={onPressOrder}/>
           <CardItem text={"Setting"} name="settings-outline" last={true} />
         </View>
       </View>

@@ -11,16 +11,24 @@ import {
 import { useDispatch } from "react-redux";
 import colors from "../assets/colors";
 import CartItem from "../components/cartItem";
+import Popup from "../components/Popup";
 import { DbService } from "../service/db";
 import CustomerButton from "../components/customButton";
 import UNIQLO from "../assets/icon/UNIQLO.svg";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { addItem } from "../redux/shopping-cart/cartItemsSlice";
+import { useSelector } from "react-redux";
+const axios = require("axios").default;
 
 const Cart = ({ navigation }) => {
+  const productCarts = useSelector((state) => state.cartItems.value);
+  const userInfor = useSelector((state) => state.user.user);
+  const userToken = useSelector((state) => state.user.token);
+  console.log("ketqua", userInfor, userToken);
   const dispatch = useDispatch();
-  const [items, setItems] = useState([]);
+  const [order_items, setOrderItems] = useState([]);
   const [total, setTotal] = useState(0.0);
+  const [visible, setModalVisible] = useState(false);
+
   const getCart = async () => {
     const value = await AsyncStorage.getItem("cart");
     if (value != null) {
@@ -28,87 +36,140 @@ const Cart = ({ navigation }) => {
     }
   };
   useEffect(() => {
-    const getItems = () => {
-      let total = 0;
-      const data = DbService.getCartDummy();
-      data.map((cart) => {
-        total += cart.price * cart.quantity;
-      });
-
-      setTotal(total);
-
-      setItems(data);
-    };
-
-    console.log("item", items.length);
-    getItems();
     const unsubscribe = navigation.addListener("focus", () => {
       getCart();
     });
 
     return unsubscribe;
   }, [navigation]);
+
+  useEffect(() => {
+    const getItems = () => {
+      let total = 0;
+      productCarts.map((item) => {
+        console.log(item, "---------");
+        total += item.price * item.quantity;
+      });
+
+      setTotal(total);
+    };
+    getItems();
+  }, [productCarts]);
+
+  const getOrderItems = () => {
+    let order_items = [];
+    productCarts.map((item) => {
+      console.log("itemnhatne", item);
+      order_items = [
+        ...order_items,
+        {
+          detail_product_id: item.detail_product_id,
+          quantity: item.quantity,
+          price: item.price,
+        },
+      ];
+      setOrderItems(order_items);
+    });
+  };
+
+  const orderProduct = () => {
+    getOrderItems();
+    if (userInfor && userToken) {
+      const data = {
+        mobile: userInfor.mobile,
+        name: userInfor.username,
+        amount: total,
+        address: userInfor.address,
+        order_items: order_items,
+      };
+      axios("http://192.168.1.11:5500/api/order", {
+        method: "post",
+        headers: { "auth-token": userToken },
+        data: data,
+      })
+        .then(function (response) {
+          console.log(response);
+          setModalVisible(true);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    } else {
+      navigation.navigate("StackSign");
+    }
+  };
+
   return (
-    <View style={{ backgroundColor: "#ffffff", flex: 1 }}>
-      {items.length < 1 ? (
-        <View style={styles.emptyCart}>
-          <UNIQLO fill={colors.red} />
-          <Text style={{ fontFamily: "SFB", fontSize: 20, marginVertical: 50 }}>
-            Your cart is empty
-          </Text>
-          <Text style={{ fontFamily: "SFM", fontSize: 10, marginBottom: 5 }}>
-            Check out our
-          </Text>
-          <CustomerButton text={"Catalog"} buttonStyle={styles.catalogButton} />
-        </View>
-      ) : (
-        <View style={styles.mainContainer}>
-          <View style={styles.cartList}>
-            <ScrollView style={styles.scrollView}>
-              {items.map((cart) => (
-                <CartItem key={cart.id} cart={cart} />
-              ))}
-            </ScrollView>
-          </View>
-          <View style={styles.btmContainer}>
-            <View style={{}}>
-              <View style={styles.line}></View>
-              <View style={styles.totalSection}>
-                <Text style={{ fontFamily: "SFM", fontSize: 18 }}>Total</Text>
-                <Text style={{ fontFamily: "SFB", fontSize: 22 }}>
-                  ${total.toFixed(2)}
-                </Text>
-              </View>
-            </View>
-            <TouchableOpacity
-              style={{
-                backgroundColor: colors.nightRider,
-                borderColor: "red",
-                borderRadius: 10,
-                marginHorizontal: 5,
-                paddingVertical: 12,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-              onPress={() => {
-                dispatch(addItem('3'))
-                AsyncStorage.removeItem('token')
-              }}
+    <>
+      <Popup notify={"Order Successful !"} visible={visible} setModalVisible={setModalVisible} />
+      <View style={{ backgroundColor: "#ffffff", flex: 1 }}>
+        {productCarts.length < 1 ? (
+          <View style={styles.emptyCart}>
+            <UNIQLO fill={colors.red} />
+            <Text
+              style={{ fontFamily: "SFB", fontSize: 20, marginVertical: 50 }}
             >
-              <Text
+              Your cart is empty
+            </Text>
+            <Text style={{ fontFamily: "SFM", fontSize: 10, marginBottom: 5 }}>
+              Check out our
+            </Text>
+            <CustomerButton
+              text={"Home"}
+              buttonStyle={styles.catalogButton}
+              onPress={() => {
+                navigation.navigate("Home");
+              }}
+            />
+          </View>
+        ) : (
+          <View style={styles.mainContainer}>
+            <View style={styles.cartList}>
+              <ScrollView style={styles.scrollView}>
+                {productCarts.map((cart) => (
+                  <CartItem key={cart.id} cart={cart} />
+                ))}
+              </ScrollView>
+            </View>
+            <View style={styles.btmContainer}>
+              <View style={{}}>
+                <View style={styles.line}></View>
+                <View style={styles.totalSection}>
+                  <Text style={{ fontFamily: "SFM", fontSize: 18 }}>Total</Text>
+                  <Text style={{ fontFamily: "SFB", fontSize: 22 }}>
+                    ${total.toFixed(2)}
+                  </Text>
+                </View>
+              </View>
+              <TouchableOpacity
                 style={{
-                  color: colors.white,
-                  fontFamily: "SFSB",
-                  fontSize: 20,
+                  backgroundColor: colors.nightRider,
+                  borderColor: "red",
+                  borderRadius: 10,
+                  marginHorizontal: 5,
+                  paddingVertical: 12,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+                onPress={() => {
+                  orderProduct();
                 }}
               >
-                Order
-              </Text>
-            </TouchableOpacity>
+                <Text
+                  style={{
+                    color: colors.white,
+                    fontFamily: "SFSB",
+                    fontSize: 20,
+                  }}
+                >
+                  Order
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      )}
-    </View>
+        )}
+      </View>
+    </>
   );
 };
 const styles = StyleSheet.create({

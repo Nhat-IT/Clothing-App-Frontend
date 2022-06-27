@@ -3,27 +3,30 @@ import {StyleSheet,View,Image,Text,TouchableOpacity} from 'react-native'
 import colors from "../assets/colors";
 import Record from '../assets/icon/record.svg'
 import Radio from '../assets/icon/radio.svg'
+import { removeItem } from "../redux/shopping-cart/cartItemsSlice";
+import { useDispatch } from "react-redux";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const CartItem = ({cart})=>{
+    const dispatch = useDispatch()
+    console.log("cart", cart.image)
     const removeFromCarrt = async ()=>{
-        const value = await AsyncStorage.getItem('cart')
-        const datas = JSON.parse(value)
-        const newData = datas.filter(d=>d.productID != cart.productID)
-        await AsyncStorage.setItem('cart',JSON.stringify(newData))
+        dispatch(removeItem({
+            detail_product_id: cart.detail_product_id,
+            size: cart.detail_product_id
+        }))
     }
     return (
         <View style={styles.cartItemContainer}> 
             <Image 
               style={styles.imageItem}
-              source={{uri : cart.imageUrl}}/>
+              source={{uri : `http://192.168.1.11:5500/${cart.image}`}}/>
               <View style={styles.infoSection}>
                   <View style={styles.topItem}>
                         <View style={styles.cartTitle}>
                            
-                             <Text style={{fontFamily : 'SFSB'}} >{cart.name}</Text>
-                             <Text style={{fontFamily : 'SFSB'}}>{cart.category}</Text>
+                             <Text style={{fontFamily : 'SFSB', maxWidth: 130}} >{cart.nameProduct}</Text>
                         </View>
                         <View>
                           <TouchableOpacity style={styles.xIcon}
@@ -34,8 +37,8 @@ const CartItem = ({cart})=>{
                         </View>
                   </View>  
                   <View style={styles.colorSection}>
-                      <Record width={50} height={50} fill={cart.color.code}/>
-                      <Text  style={{fontFamily : 'SFSB'}}>{cart.color.name}</Text>
+                      <Record width={50} height={50} fill={cart.colorHex}/>
+                      <Text  style={{fontFamily : 'SFSB'}}>{cart.color}</Text>
                   </View>
                   <View style={styles.bottomSection}>
                        <View style={styles.textAura}>

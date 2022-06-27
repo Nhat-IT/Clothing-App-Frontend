@@ -1,30 +1,44 @@
 import React,{useEffect,useState,useRef} from 'react';
 import colors from '../assets/colors'
 import { DbService } from '../service/db';
+import { CateService } from '../service/CategoryService';
 import {View,Text,TextInput,StyleSheet,ScrollView} from 'react-native'
 import TypeItem from '../components/TypeItem';
 import CateItem from '../components/cateItem';
-const Search = ()=>{
+import { ProductService } from '../service/ProductService';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+const Search = ({navigation})=>{
     const allCategory = useRef([])
     const [category,setCategory] = useState([])
     const [types,setTypes] = useState([])
     const [selectIndex,setSelectIndex] = useState(0)
     useEffect(()=>{
-        const getType = ()=>{
-            const data = DbService.getType()
+        const getType = async ()=>{
+            const data = await CateService.getAllTypes()
             setTypes(data);
-            const dataCate = DbService.allCategory()
+            const dataCate =await CateService.getAllCate()
             allCategory.current = dataCate;
-            const getCategory = allCategory.current.filter(cate=>cate.typeId.includes(data[selectIndex].id))
+            const getCategory = allCategory.current.filter(cate=>cate.typeid == data[selectIndex].id)
             setCategory(getCategory)
+            const product = await ProductService.getAllProducts()
+            await AsyncStorage.setItem("products", JSON.stringify(product));
         }
         getType()
-        
-    },[])
+    },[navigation])
+
+    
+    const onCateClick = (id)=> {
+        navigation.navigate("ProductCate", {id : id})
+    }
     const onTypeClick = (index,id)=>{
-        const getCategory = allCategory.current.filter(cate=>cate.typeId.includes(id))
+        console.log("typeId",id,allCategory)
+        const getCategory = allCategory.current.filter(cate=>cate.typeid==id)
         setCategory(getCategory)
         setSelectIndex(index)
+    }
+    const searchItem = (text)=>{
+        const getCategory = allCategory.current.filter(cate=>cate.typeid==types[selectIndex].id &&cate.title.toUpperCase().includes(text.toUpperCase()))
+        setCategory(getCategory)
     }
     return(
         
@@ -33,7 +47,7 @@ const Search = ()=>{
         <TextInput
         style={styles.input}
         placeholder="Search"
-
+        onChangeText={text=>searchItem(text)}
         />
         <View style={styles.typeContainer}>
             {types.map((type,index)=>(
@@ -44,7 +58,7 @@ const Search = ()=>{
         <View style={styles.cateContainer}>
         <ScrollView style={styles.scrollView}>
             {category.map((cate,index)=>(
-                <CateItem key={cate.id} cate={cate} last={index+1==category.length}/>
+                <CateItem key={cate.id} cate={cate} last={index+1==category.length}  onClick={onCateClick}/>
             ))}
             </ScrollView>
         </View>
