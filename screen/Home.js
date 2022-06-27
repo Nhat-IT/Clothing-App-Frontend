@@ -58,6 +58,7 @@ const Home = ({ navigation }) => {
       .get("http://192.168.1.11:5500/api/product")
       .then(function (response) {
         // handle success
+        console.log(response.data.data)
         setProducts(response.data.data);
         setIsLoading(false)
       })
@@ -78,6 +79,7 @@ const Home = ({ navigation }) => {
   useEffect(() => {}, [navigation]);
 
   const Item = ({ title }) => {
+    console.log("title",title)
     return (
       <View style={styles.item}>
         <Image
@@ -109,6 +111,7 @@ const Home = ({ navigation }) => {
                       onPress={() =>
                         navigation.navigate("ProductInfo", {
                           productID: item.product.id,
+                          rate: Math.floor(Math.random() * 5)
                         })
                       }
                       underlayColor={"#e7e9eb"}

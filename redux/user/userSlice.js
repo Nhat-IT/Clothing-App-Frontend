@@ -13,6 +13,7 @@ export const userSlice = createSlice({
     addUser: (state, { payload }) => {
       state.user = payload;
       try {
+        
       } catch {}
     },
     addToken: (state, { payload }) => {

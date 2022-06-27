@@ -17,21 +17,21 @@ import Entypo from "react-native-vector-icons/Entypo";
 import Ionic from "react-native-vector-icons/Ionicons";
 import colors from "../assets/colors.js";
 import Loading from "../components/Loading.js";
-import SplashScreen from 'react-native-splash-screen'
+import SplashScreen from "react-native-splash-screen";
 const axios = require("axios").default;
 
 const ProductInfo = ({ route, navigation }) => {
   const productID = route.params.productID;
   const width = Dimensions.get("window").width;
   const scrollX = new Animated.Value(0);
-
+  let rate = route.params.rate;
   let position = Animated.divide(scrollX, width);
 
   let [product, setProduct] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   let rates = [1, 1, 1, 1, 1];
   let [icon, setIcon] = useState("heart");
-  const [selectedSize, setSelectSize] = useState(-1);
+  const [selectedSize, setSelectSize] = useState(0);
   const changeNameIcon = () => {
     if (icon === "heart") {
       setIcon("heart-outline");
@@ -70,24 +70,23 @@ const ProductInfo = ({ route, navigation }) => {
     }
   };
 
-  // getRate = () => {
-  //   let arrRate = [];
-  //   let rate = product.rate;
-  //   do {
-  //     arrRate.push(1);
-  //     rate = rate - 1;
-  //   } while (rate > 0.5);
-  //   if (rate == 0.5) arrRate.push(0.5);
-  //   arrRate = arrRate.concat(new Array(5 - arrRate.length).fill(0));
-  //   rates = arrRate;
-  // };
+  const getRate = () => {
+    let arrRate = [];
+    do {
+      arrRate.push(1);
+      rate = rate - 1;
+    } while (rate > 0.5);
+    if (rate == 0.5) arrRate.push(0.5);
+    arrRate = arrRate.concat(new Array(5 - arrRate.length).fill(0));
+    rates = arrRate;
+  };
 
   const getProductFromDatabase = async () => {
     axios
       .get(`http://192.168.1.11:5500/api/product/${productID}`)
       .then(function (response) {
         // handle success
-        console.log("hello")
+        console.log(response.data);
         setProduct(response.data);
         SplashScreen.hide();
         setIsLoading(false);
@@ -102,12 +101,12 @@ const ProductInfo = ({ route, navigation }) => {
   };
 
   useEffect(() => {
-
     getProductFromDatabase();
   }, [navigation]);
 
-  // getRate();
+  getRate();
   const renderProduct = ({ item, index }) => {
+    console.log("item", item);
     return (
       <View
         style={{
@@ -118,7 +117,7 @@ const ProductInfo = ({ route, navigation }) => {
         }}
       >
         <Image
-          source={item}
+          source={{ uri: `http://192.168.1.11:5500/${item.url}` }}
           style={{
             width: "100%",
             height: "100%",
@@ -141,7 +140,7 @@ const ProductInfo = ({ route, navigation }) => {
       position="relative"
     >
       {!isLoading ? (
-        <ScrollView>
+        <>
           <View
             style={{
               width: "100%",
@@ -239,138 +238,169 @@ const ProductInfo = ({ route, navigation }) => {
               // backgroundColor: "red",
               marginLeft: "auto",
               marginRight: "auto",
+              position: "relative",
+              height: 350,
             }}
           >
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginTop: 7,
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 15,
-                  width: 240,
-                  fontFamily: "Macondo-Regular",
-                }}
-              >
-                {product.name}
-              </Text>
-              <TouchableOpacity onPress={changeNameIcon}>
-                <Ionic name={icon} style={{ fontSize: 20 }} />
-              </TouchableOpacity>
-            </View>
-            <View
-              style={{
-                marginTop: 7,
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-                {product.price} VND
-              </Text>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <View style={{ flexDirection: "row" }}>
-                  {rates.map((item) => {
-                    let name =
-                      item == 1
-                        ? "star"
-                        : item == 0.5
-                        ? "star-half-outline"
-                        : "star-outline";
-                    return <Ionic name={name} style={{ fontSize: 17 }} />;
-                  })}
-                </View>
-                <Text style={{ marginLeft: 7 }}>{product.rate}</Text>
-              </View>
-            </View>
-            <View style={{ marginTop: 15 }}>
-              <Text style={{ marginBottom: 10, fontWeight: "bold" }}>Size</Text>
+            <ScrollView>
               <View
                 style={{
-                  flexDirection: "row",
-                  width: "100%",
-                  alignItems: "space-between",
-                  justifyContent: "space-around",
+                  width: "90%",
+                  // backgroundColor: "red",
+                  marginLeft: "auto",
+                  marginRight: "auto",
                 }}
               >
-                {product.size
-                  ? Object.keys(product.size).map((item, index) => {
-                      return (
-                        <TouchableOpacity
-                          key={index}
-                          disabled={
-                            product.size[Object.keys(product.size)[index]] == 0
-                              ? true
-                              : false
-                          }
-                          onPress={() => {
-                            if (
-                              product.size[Object.keys(product.size)[index]] !=
-                              0
-                            ) {
-                              setSelectSize(index);
-                            }
-                          }}
-                        >
-                          <Text
-                            style={{
-                              width: 50,
-                              height: 50,
-                              textDecorationLine:
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginTop: 7,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 15,
+                      width: 240,
+                      fontFamily: "Macondo-Regular",
+                    }}
+                  >
+                    {product.product.nameProduct}
+                  </Text>
+                  <TouchableOpacity onPress={changeNameIcon}>
+                    <Ionic name={icon} style={{ fontSize: 20 }} />
+                  </TouchableOpacity>
+                </View>
+                <View
+                  style={{
+                    marginTop: 7,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+                    {product.product.price} VND
+                  </Text>
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <View style={{ flexDirection: "row" }}>
+                      {rates.map((item) => {
+                        let name =
+                          item == 1
+                            ? "star"
+                            : item == 0.5
+                            ? "star-half-outline"
+                            : "star-outline";
+                        return <Ionic name={name} style={{ fontSize: 17 }} />;
+                      })}
+                    </View>
+                    <Text style={{ marginLeft: 7 }}>{product.rate}</Text>
+                  </View>
+                </View>
+                <View style={{ marginTop: 15 }}>
+                  <Text style={{ marginBottom: 10, fontWeight: "bold" }}>
+                    Size
+                  </Text>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      width: "100%",
+                      alignItems: "space-between",
+                      justifyContent: "space-around",
+                    }}
+                  >
+                    {product.size
+                      ? product.size.map((item, index) => {
+                          console.log("hehe", product.size);
+                          return (
+                            <TouchableOpacity
+                              key={index}
+                              disabled={
                                 product.size[
                                   Object.keys(product.size)[index]
                                 ] == 0
-                                  ? "line-through"
-                                  : "none",
-                              backgroundColor:
-                                product.size[
-                                  Object.keys(product.size)[index]
-                                ] == 0
-                                  ? colors.ligthGray
-                                  : "#e5eddf",
-                              borderRadius: 10,
-                              textAlign: "center",
-                              lineHeight: 50,
-                              fontWeight: "bold",
-                              borderWidth: index == selectedSize ? 3 : 0,
-                              color:
-                                product.size[
-                                  Object.keys(product.size)[index]
-                                ] == 0
-                                  ? colors.gray
-                                  : colors.black,
-                            }}
-                          >
-                            {item}
-                          </Text>
-                        </TouchableOpacity>
-                      );
-                    })
-                  : null}
+                                  ? true
+                                  : false
+                              }
+                              onPress={() => {
+                                if (
+                                  product.size[
+                                    Object.keys(product.size)[index]
+                                  ] != 0
+                                ) {
+                                  console.log("index", index)
+                                  setSelectSize(index);
+                                }
+                              }}
+                            >
+                              <Text
+                                style={{
+                                  width: 50,
+                                  height: 50,
+                                  textDecorationLine:
+                                    product.size[
+                                      Object.keys(product.size)[index]
+                                    ] == 0
+                                      ? "line-through"
+                                      : "none",
+                                  backgroundColor:
+                                    product.size[
+                                      Object.keys(product.size)[index]
+                                    ] == 0
+                                      ? colors.ligthGray
+                                      : "#e5eddf",
+                                  borderRadius: 10,
+                                  textAlign: "center",
+                                  lineHeight: 50,
+                                  fontWeight: "bold",
+                                  borderWidth: index == selectedSize ? 3 : 0,
+                                  color:
+                                    product.size[
+                                      Object.keys(product.size)[index]
+                                    ] == 0
+                                      ? colors.gray
+                                      : colors.black,
+                                }}
+                              >
+                                {item.size}
+                              </Text>
+                            </TouchableOpacity>
+                          );
+                        })
+                      : null}
+                  </View>
+                </View>
+                <View
+                  style={{
+                    marginTop: 13,
+                    flexDirection:"row"
+                  }}
+                >
+                  <Text
+
+                    style={{ fontWeight: "bold", marginBottom: 7 }}
+                  >
+                    Số lượng còn:
+                  </Text>
+                  <Text>{'    '}{product.size[selectedSize].quantity}</Text>
+                </View>
+                <View
+                  style={{
+                    marginTop: 13,
+                  }}
+                >
+                  <Text
+                    flexDirection="column"
+                    style={{ fontWeight: "bold", marginBottom: 7 }}
+                  >
+                    Mô tả
+                  </Text>
+                  <Text>{product.product.descProduct}</Text>
+                </View>
+                
               </View>
-            </View>
-            <View
-              style={{
-                marginTop: 13,
-              }}
-            >
-              <Text
-                flexDirection="column"
-                style={{ fontWeight: "bold", marginBottom: 7 }}
-              >
-                Mô tả
-              </Text>
-              {product.description
-                ? product.description.map((item) => {
-                    return <Text>+ {item}</Text>;
-                  })
-                : null}
-            </View>
+            </ScrollView>
             <TouchableOpacity
               onPress={() => {
                 addToCart();
@@ -385,8 +415,9 @@ const ProductInfo = ({ route, navigation }) => {
                   height: 50,
                   backgroundColor: COLOURS.black,
                   borderRadius: 10,
-                  marginTop: 20,
-                  marginBottom: 20,
+                  position: "absolute",
+                  bottom: 10,
+                  width: "100%",
                 }}
               >
                 <Text style={{ fontSize: 20, color: COLOURS.white }}>
@@ -395,9 +426,9 @@ const ProductInfo = ({ route, navigation }) => {
               </View>
             </TouchableOpacity>
           </View>
-        </ScrollView>
+        </>
       ) : (
-        <Loading type="loading"/>
+        <Loading type="loading" />
       )}
     </View>
   );
